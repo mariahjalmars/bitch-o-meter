@@ -10,3 +10,13 @@ Persónulegt app til að skrá pirring með einu smelli (rödd eða texta), sjá
 - **Setja á heimaskjá:** opna síðuna í símanum → Deila → „Add to Home Screen“.
 
 Static síða, engin build-skref. Netlify: publish directory = rótin.
+
+## Íslensk raddgreining á iPhone (ókeypis)
+
+Safari á iPhone styður ekki íslenska raddgreiningu, svo appið tekur upp hljóð og sendir það í gegnum Netlify-aðgerðina `netlify/functions/transcribe.mjs` til Groq (Whisper large v3, ókeypis aðgangur).
+
+1. Búðu til aðgang á https://console.groq.com og búðu til API-lykil.
+2. Á Netlify: Site configuration → Environment variables → bæta við `GROQ_API_KEY` = lykillinn.
+3. Deploy aftur (Deploys → Trigger deploy).
+
+Hljóðið er ekki vistað í appinu. Textinn og allar skráningar eru bara í símanum.

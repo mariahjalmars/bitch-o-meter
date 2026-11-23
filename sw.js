@@ -1,5 +1,5 @@
 // Einfalt offline-skyndiminni. Netið fyrst, svo skyndiminni ef netið er ekki til staðar.
-const CACHE = 'bom-v1';
+const CACHE = 'bom-v3';
 const CORE = ['./', './index.html', './manifest.json', './img/maja-happy.jpg', './img/maja-annoyed.jpg', './img/maja-angry.jpg', './img/neutral.jpg', './img/icon-192.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
