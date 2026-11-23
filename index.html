@@ -1,256 +1,580 @@
 <!DOCTYPE html>
-<html lang="is" class="h-full">
+<html lang="is">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Bitch-o-meter</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            display: ['"Bricolage Grotesque"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              deep: '#0A3340',
-              ocean: '#0F4C5C',
-              teal: '#1A6E78',
-              sea: '#2A8487',
-              glass: '#7BC4B8',
-              mist: '#E4F0EE',
-              ink: '#16142A'
-            }
-          }
-        }
-      }
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F4C5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bitch-o-meter">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="icon" href="img/icon-192.png">
+<title>Bitch-o-meter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#0A3340; --ocean:#0F4C5C; --teal:#1A6E78; --sea:#2A8487; --glass:#7BC4B8;
+  --mist:#E4F0EE; --sand:#F2DFC0; --peach:#EFD3BC; --ink:#16142A; --muted:#5F5B69;
+  --chipbg:#D7ECEA; --chipfg:#0E5560;
+  --dark-grad:linear-gradient(165deg,#0A3340 0%,#0F4C5C 40%,#1A6E78 75%,#2A8487 100%);
+  --light-grad:linear-gradient(170deg,#F4EFE6 0%,#E4F0EE 55%,#CFE6E4 100%);
+  --sand-grad:linear-gradient(135deg,#F2DFC0 0%,#EFD3BC 45%,#CDE7E3 100%);
+  --ink-grad:linear-gradient(150deg,#16142A 0%,#0F4C5C 60%,#1F7480 100%);
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--light-grad);min-height:100dvh}
+body.dark{background:var(--dark-grad);color:#fff}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:calc(14px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom))}
+.hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 4px 10px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.brand b{font-family:var(--display);font-size:24px;font-weight:800;letter-spacing:-.5px}
+.today{font-size:15px;font-weight:600}
+.today b{font-family:var(--display);font-size:28px;margin-left:4px}
+.back{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;flex:0 0 44px}
+h1.title{font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.05;margin:0}
+.sub{font-size:14px;color:var(--muted);margin-top:2px}
+.card{background:#fff;border-radius:22px;padding:16px;margin-bottom:12px}
+.card.sand{background:var(--sand-grad)}
+.card.inkc{background:var(--ink-grad);color:#fff}
+.card.dark{background:#16142A;color:#fff}
+.lbl{font-size:13px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px}
+.inkc .lbl,.dark .lbl{color:#CDE7E6}
+.big{font-family:var(--display);font-weight:800}
+.chip{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--chipbg);color:var(--chipfg);font-size:12px;font-weight:700}
+.pill{min-height:42px;padding:0 14px;border-radius:999px;border:1px solid #D9D1CB;background:#fff;color:var(--ink);font-size:13px;font-weight:700}
+.pill.on{background:var(--ocean);border-color:var(--ocean);color:#fff}
+.btn{display:block;width:100%;text-align:center;padding:16px;border-radius:16px;border:none;font-weight:800;font-size:16px;text-decoration:none;margin-bottom:10px}
+.btn.ink{background:#16142A;color:#fff}
+.btn.teal{background:linear-gradient(120deg,#0F4C5C,#2A8487);color:#fff}
+.btn.light{background:#fff;color:var(--ink);border:1px solid #C9C1BA}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.row{display:flex;align-items:center;gap:10px}
+.hbar{display:flex;align-items:center;gap:10px;margin:9px 0}
+.hbar .n1{width:140px;font-size:13px}
+.hbar .tr{flex:1;height:14px;background:#F1ECE8;border-radius:7px;overflow:hidden}
+.hbar .fl{height:100%;border-radius:7px;transform-origin:left;animation:growX .7s cubic-bezier(.2,.8,.2,1)}
+.hbar .n2{width:24px;text-align:right;font-size:13px;font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:8px;height:120px}
+.bars .b{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.bars .b i{display:block;width:100%;border-radius:6px 6px 2px 2px;min-height:3px;transform-origin:bottom;animation:growY .7s cubic-bezier(.2,.8,.2,1)}
+.bars small{font-size:11px;color:var(--muted)}
+.bars em{font-style:normal;font-size:11px;font-weight:700}
+@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* home */
+.home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding-bottom:20px}
+.avatarRow{display:flex;align-items:center;gap:12px}
+.avatar{width:150px;height:150px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 10px 24px rgba(22,20,42,.3)}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.bubble{background:#fff;color:var(--ink);padding:12px 14px;border-radius:18px 18px 18px 4px;font-family:var(--display);font-size:20px;font-weight:800;max-width:150px;line-height:1.15;animation:pop .35s ease-out}
+.happy{animation:bob 2.4s ease-in-out infinite}
+.annoyed{animation:tilt 2.8s ease-in-out infinite}
+.angry{animation:shake .5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes tilt{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg)}60%{transform:rotate(3deg)}}
+@keyframes shake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-5px) rotate(-3deg)}40%{transform:translateX(5px) rotate(3deg)}60%{transform:translateX(-4px) rotate(-2deg)}80%{transform:translateX(4px) rotate(2deg)}}
+@keyframes pop{0%{transform:scale(.7)}100%{transform:scale(1)}}
+#grr{width:240px;height:240px;border-radius:50%;border:none;background:#fff;color:var(--ocean);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 24px 50px rgba(22,20,42,.3);transition:transform .12s}
+#grr:active{transform:scale(.94)}
+#grr span{font-family:var(--display);font-size:58px;font-weight:800;letter-spacing:-1px;line-height:1}
+#grr.listening{animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}100%{box-shadow:0 0 0 38px rgba(255,255,255,0)}}
+.hint{font-size:20px;font-weight:700;text-align:center}
+
+/* sheet */
+#sheet{position:fixed;left:50%;transform:translate(-50%,calc(100% + 160px));visibility:hidden;bottom:calc(92px + env(safe-area-inset-bottom));width:min(456px,calc(100% - 24px));background:#fff;color:var(--ink);border-radius:22px;padding:18px;box-shadow:0 12px 34px rgba(31,29,43,.2);transition:transform .25s ease,visibility 0s linear .25s;z-index:20}
+#sheet.open{transform:translate(-50%,0);visibility:visible;transition:transform .25s ease}
+#sheet .st{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+#live{font-size:18px;line-height:1.4;min-height:50px;margin:8px 0}
+#manual{width:100%;font-family:inherit;font-size:16px;padding:12px;border-radius:12px;border:1px solid #E3DCD7;background:#FBF9F8;color:var(--ink);resize:none}
+.two{display:flex;gap:10px;margin-top:10px}
+.two button{flex:1;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700}
+.quip{font-size:15px;font-style:italic;margin-top:6px}
+
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;padding:12px 20px calc(18px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:10px;z-index:10}
+body:not(.dark) nav.tabs{background:rgba(228,240,238,.92);backdrop-filter:blur(8px)}
+nav.tabs a{padding:12px 26px;border-radius:999px;font-size:15px;font-weight:700;text-decoration:none;border:1px solid #C9C1BA;color:var(--ink)}
+body.dark nav.tabs a{border-color:rgba(255,255,255,.8);color:#fff;background:rgba(255,255,255,.16)}
+nav.tabs a.on{background:#16142A;border-color:#16142A;color:#fff}
+
+/* heatmap */
+.hm{display:grid;grid-template-columns:30px repeat(9,minmax(0,1fr));gap:3px;align-items:center}
+.hm .c{height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;animation:pop .4s ease-out}
+.hm .d{font-size:11px;font-weight:600;color:var(--muted)}
+.hm .h{font-size:10px;color:var(--muted);text-align:center}
+.legend{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:10px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:16px;height:12px;border-radius:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 12px}
+
+.entry{padding:10px 0;border-top:1px solid #EEE8E4}
+.entry:first-of-type{border-top:none}
+.entry select{font-family:inherit;font-size:13px;padding:5px 8px;border-radius:10px;border:1px solid #D9D1CB;background:#fff;color:var(--ink);max-width:70%}
+.entry .del{background:none;border:none;color:var(--muted);font-size:12px;padding:6px}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.grid3 .seg,.grid4 .seg{min-height:44px;border-radius:14px;border:1px solid #D9D1CB;background:#fff;color:var(--ink);font-size:14px;font-weight:700}
+.seg.on{background:var(--ocean);border-color:var(--ocean);color:#fff}
+.stat{background:#EEF4F3;border-radius:14px;padding:10px 4px}
+input.name{width:100%;font-family:inherit;font-size:16px;padding:12px;border-radius:12px;border:1px solid #D9D1CB}
+.toast{position:fixed;top:calc(16px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:#16142A;color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:30}
+.toast.show{opacity:1}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
 </head>
-<body class="h-full bg-gradient-to-b from-[#0A3340] via-[#0F4C5C] to-[#1A6E78] text-white font-sans flex flex-col justify-between p-6 select-none overflow-hidden antialiased">
-  
-  <!-- Toppstika -->
-  <header class="flex items-center justify-between pt-2">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-full bg-brand-ocean/80 border border-brand-sea/30 flex items-center justify-center shadow-inner">
-        <svg class="w-6 h-6 text-brand-glass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 4v4m0 8v4M4 12h4m8 0h4m-3.5-6.5l-2.8 2.8m-5.4 5.4l-2.8 2.8m11 0l-2.8-2.8M7.7 7.7l-2.8-2.8"/>
-        </svg>
-      </div>
-      <h1 class="font-display font-extrabold text-2xl tracking-tight text-white drop-shadow-sm">Bitch-o-meter</h1>
-    </div>
-    <div class="bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/15 text-xs font-semibold tracking-wide flex items-center gap-1.5 shadow-sm">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>Í dag: <strong id="todayCount" class="font-display text-sm">5</strong></span>
-    </div>
-  </header>
+<body class="dark">
+<div class="app" id="app"></div>
 
-  <!-- Miðjusvæði & Avatar -->
-  <main class="flex flex-col items-center justify-center flex-1 my-auto">
-    <!-- Talbóla & Avatar -->
-    <div class="flex items-center gap-4 mb-10 max-w-xs w-full">
-      <div class="w-16 h-16 rounded-full bg-brand-mist/90 border-2 border-white/60 p-0.5 shadow-lg flex-shrink-0 flex items-center justify-center">
-        <svg class="w-10 h-10 text-brand-ocean" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="12" cy="12" r="10"/>
-          <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
-          <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
-          <path d="M8 16c2-1 6-1 8 0" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="bg-white/95 backdrop-blur-sm text-brand-ink px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-md border border-white/40">
-        <p class="font-bold text-sm tracking-tight">Hmm. Anda djúpt.</p>
-        <p class="text-[11px] text-brand-sea font-semibold uppercase tracking-wider">Núvitund & ró</p>
-      </div>
+<div id="sheet" role="dialog" aria-label="Skráning">
+  <div class="st" id="stListen" style="color:#0F6B73">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F6B73" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    <span id="stListenTxt">Hlustar… talaðu núna</span>
+  </div>
+  <div class="st" id="stSaved" style="color:#2E7D5B;display:none">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E7D5B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    Vistað ✓
+  </div>
+  <div id="live" class="muted">Talaðu núna…</div>
+  <div id="savedInfo" style="display:none">
+    <div class="row small muted">Flokkað sem <span class="chip" id="savedTheme"></span></div>
+    <div class="quip" id="savedQuip"></div>
+  </div>
+  <div id="editArea">
+    <label for="manual" class="small muted">…eða skrifaðu sjálf (eða notaðu hljóðnemann á lyklaborðinu)</label>
+    <textarea id="manual" rows="2"></textarea>
+    <div class="two">
+      <button id="btnSkip" style="background:#EFEAE6;color:#16142A">Bara tíminn</button>
+      <button id="btnDone" style="background:#16142A;color:#fff">Klára</button>
     </div>
+  </div>
+</div>
 
-    <!-- Stóri Grr! Hnappurinn -->
-    <button id="grrBtn" class="relative group active:scale-95 transition-all duration-200 outline-none">
-      <div class="absolute -inset-3 bg-white/20 rounded-full blur-xl group-hover:bg-white/30 transition"></div>
-      <div class="relative w-56 h-56 rounded-full bg-white shadow-2xl flex flex-col items-center justify-center border-4 border-white/80">
-        <div class="w-12 h-12 text-brand-ocean mb-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
-            <line x1="9" y1="9" x2="9.01" y2="9"/>
-            <line x1="15" y1="9" x2="15.01" y2="9"/>
-            <path d="M8 7l3 2m5-2l-3 2"/>
-          </svg>
-        </div>
-        <span class="font-display font-extrabold text-5xl text-brand-ocean tracking-tight">Grr!</span>
-        <span class="text-xs font-bold text-brand-teal uppercase tracking-widest mt-1 flex items-center gap-1">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-          </svg>
-          Hljóðupptaka
-        </span>
-      </div>
+<nav class="tabs" id="tabs">
+  <a href="#heim" data-tab="heim">Skrá</a>
+  <a href="#yfirlit" data-tab="yfirlit">Yfirlit</a>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ Geymsla: allt er bara í þessu tæki ============ */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+const IMG = { calm: 'img/maja-happy.jpg', annoyed: 'img/maja-annoyed.jpg', angry: 'img/maja-angry.jpg', neutral: 'img/neutral.jpg' };
+
+const DEFAULT_THEMES = {
+  'Heimili – skór':          { words: ['skó', 'skór', 'forstof', 'hrasa', 'skóhill'], quip: 'Skórnir eru að vinna. Aftur.' },
+  'Hundur – nágrannahundur': { words: ['nágranna', 'trylltist', 'stigagang', 'gelt'], quip: 'Hundurinn þinn hefur sko skoðanir.' },
+  'Hundur – göngutúrar':     { words: ['hund', 'pissa', 'göngutúr', 'labb', 'út með'], quip: 'Þrjár hæðir. Á hverjum. Einasta. Morgni.' },
+  'Heimili – húsverk':       { words: ['innkaup', 'poka', 'uppþvott', 'þvott', 'rusl', 'þrif', 'elda', 'búð'], quip: 'Fótadagur, greinilega.' },
+  'Fjölskylda – símtöl':     { words: ['hring', 'símtal', 'hringja', 'hringdu'], quip: 'Þú ert ekki símaver. Í alvöru.' },
+  'Fjölskylda – sonur':      { words: ['sonur', 'strák', 'svang'], quip: 'Gefðu dýrinu að borða. Strax.' },
+  'Fjölskylda – dóttir':     { words: ['dótti', 'stelp', 'dónaleg', 'hreyt'], quip: 'Veðurspá fyrir unglinginn: Stormur.' },
+  'Fjölskylda – eiginmaður': { words: ['maðurinn', 'eiginm', 'sjónvarp', 'fjarstýr', 'háttatím'], quip: 'Fjarstýringin er óvinurinn.' },
+  'Vinna':                   { words: ['vinn', 'fund', 'tölvupóst', 'póstur', 'verkefn', 'viðskiptavin', 'frest'], quip: 'Andaðu. Pósthólfið bíður.' },
+  'Sjálfsgagnrýni':          { words: ['vond manneskja', 'léleg', 'ömurleg', 'samviskubit', 'mér að kenna', 'nógu góð'], quip: 'Þú ert ekki vond manneskja. Þú ert að gera mjög mikið.', kind: true },
+  'Annað':                   { words: [], quip: 'Skráð. Andaðu út.' }
+};
+const STOP = new Set('og að en sem er var það þetta þessi hann hún þau við ég mig mér minn mín mitt þú þig þér á í um til frá með fyrir eftir yfir undir ekki líka bara svo þá nú enn aftur alltaf allt alla aldrei sko hérna þarna einn eitt ein enn þegar núna'.split(' '));
+
+const TIPS = {
+  'Heimili – skór': ['Körfa eða hilla við útidyrnar, ein á mann.', 'Skór sem eru ekki í hillunni fara í „skófangelsið“.'],
+  'Hundur – göngutúrar': ['Morgungöngutúrinn verður vakt: krakkarnir skiptast á.', 'Hafðu taum og poka tilbúna við dyrnar kvöldið áður.'],
+  'Hundur – nágrannahundur': ['Færðu göngutúrinn fram fyrir eða aftur fyrir toppinn á hitakortinu.'],
+  'Heimili – húsverk': ['Prófaðu heimsendingu á þyngstu innkaupunum.', 'Krakkarnir hitta þig við bílinn og bera upp.'],
+  'Fjölskylda – símtöl': ['Engin símtöl 09–15 nema neyð: sendið skilaboð.', 'Fjölskyldutafla með „hvar er mamma / hvað er í matinn“.'],
+  'Fjölskylda – sonur': ['Nestisbox tilbúið áður en toppurinn kemur.', 'Sonurinn græjar sjálfur snarl eftir skóla.'],
+  'Fjölskylda – dóttir': ['Skoðaðu hvað er í gangi þá daga sem toppurinn er: æfingar, próf, svefn?', 'Rólegra kvöld þá daga, minna af kröfum.'],
+  'Fjölskylda – eiginmaður': ['Semjið um hvenær slökkt er á sjónvarpinu á virkum dögum.', 'Heyrnartól eftir kl. 22:00.'],
+  'Vinna': ['Fyrsti klukkutíminn í djúpvinnu, tölvupóstur á eftir.', 'Engir fundir eftir kl. 15 ef heimilið toppar þá.'],
+  'Sjálfsgagnrýni': ['Talaðu við þig eins og þú myndir tala við vinkonu.', 'Skrifaðu niður eitt sem gekk vel í dag.']
+};
+const DELEGATE = {
+  'Hundur – göngutúrar': ['Morgungöngutúrinn', 'Krakkarnir skiptast á'],
+  'Heimili – húsverk': ['Innkaupapokar upp', 'Krakkarnir bera úr bílnum'],
+  'Fjölskylda – sonur': ['Nesti eftir skóla', 'Sonurinn græjar sjálfur'],
+  'Heimili – skór': ['Skórnir í forstofunni', 'Hver gengur frá sínu'],
+  'Fjölskylda – eiginmaður': ['Sjónvarpið á kvöldin', 'Hann slekkur kl. 22:00']
+};
+
+let entries = store.get('bom_entries', []);
+let themes = store.get('bom_themes', null) || JSON.parse(JSON.stringify(DEFAULT_THEMES));
+let profile = store.get('bom_profile', { name: 'Maja', gender: 'kona', age: '40' });
+Object.keys(DEFAULT_THEMES).forEach(k => { if (!themes[k]) themes[k] = JSON.parse(JSON.stringify(DEFAULT_THEMES[k])); });
+function save() { store.set('bom_entries', entries); store.set('bom_themes', themes); store.set('bom_profile', profile); }
+
+/* ============ Hjálparföll ============ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const DAYS = ['Mán', 'Þri', 'Mið', 'Fim', 'Fös', 'Lau', 'Sun'];
+const DAYS_ON = ['mánudögum', 'þriðjudögum', 'miðvikudögum', 'fimmtudögum', 'föstudögum', 'laugardögum', 'sunnudögum'];
+const SLOTS = ['06', '08', '10', '12', '14', '16', '18', '20', '22'];
+const wd = d => (d.getDay() + 6) % 7;
+const slotOf = d => { const h = d.getHours(); if (h < 6) return 8; return Math.min(8, Math.floor((h - 6) / 2)); };
+const slotLabel = i => SLOTS[i] + '–' + ('0' + (parseInt(SLOTS[i], 10) + 2)).slice(-2);
+const sameDay = (a, b) => a.toDateString() === b.toDateString();
+const daysAgo = n => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - n); return d; };
+const shortTheme = t => { const x = t.split('–').pop().trim(); return x.charAt(0).toUpperCase() + x.slice(1); };
+const fmtWhen = d => (sameDay(d, new Date()) ? 'Í dag' : DAYS[wd(d)] + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.') + ' kl. ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 1800); }
+function todayCount() { const n = new Date(); return entries.filter(e => sameDay(new Date(e.ts), n)).length; }
+function mood() { const n = todayCount(); return n <= 2 ? 'calm' : (n <= 5 ? 'annoyed' : 'angry'); }
+function avatarSrc(m) {
+  const useMe = profile.gender === 'kona' && (profile.age === '25' || profile.age === '40');
+  return useMe ? IMG[m || mood()] : IMG.neutral;
+}
+const BUBBLE = { calm: 'Lífið er gott.', annoyed: 'Hmm. Anda... anda...', angry: 'GRRR!' };
+const MOODCLASS = { calm: 'happy', annoyed: 'annoyed', angry: 'angry' };
+
+/* ============ Flokkun sem lærir af leiðréttingum ============ */
+function norm(s) { return (s || '').toLowerCase().replace(/[.,!?;:"()]/g, ' '); }
+function autoTag(text) {
+  const t = ' ' + norm(text) + ' ';
+  if (!t.trim()) return 'Annað';
+  let best = 'Annað', score = 0;
+  for (const [name, th] of Object.entries(themes)) {
+    let s = 0;
+    for (const w of th.words || []) if (w && t.includes(w)) s += w.length > 4 ? 2 : 1;
+    if (s > score) { score = s; best = name; }
+  }
+  return best;
+}
+function learn(text, theme) {
+  if (!themes[theme] || theme === 'Annað') return;
+  norm(text).split(/\s+/).filter(w => w.length >= 4 && !STOP.has(w)).forEach(w => {
+    const stem = w.length > 6 ? w.slice(0, 6) : w;
+    if (!themes[theme].words.includes(stem)) themes[theme].words.push(stem);
+  });
+  save();
+}
+
+/* ============ Upptaka ============ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, finalText = '', current = null, closeTimer = null, phase = 'idle';
+
+function openSheet() {
+  phase = 'listening';
+  $('stListen').style.display = 'flex'; $('stSaved').style.display = 'none';
+  $('savedInfo').style.display = 'none'; $('editArea').style.display = 'block';
+  $('live').textContent = 'Talaðu núna…'; $('live').className = 'muted';
+  $('manual').value = '';
+  $('sheet').classList.add('open');
+}
+function closeSheet() { $('sheet').classList.remove('open'); phase = 'idle'; render(); }
+function resetClose(ms, fn) { clearTimeout(closeTimer); closeTimer = setTimeout(fn, ms); }
+
+function startListening() {
+  finalText = '';
+  if (!SR) { $('stListenTxt').textContent = 'Raddgreining virkar ekki í þessum vafra. Skrifaðu eða notaðu hljóðnemann á lyklaborðinu.'; return; }
+  try {
+    rec = new SR();
+    rec.lang = store.get('bom_lang', 'is-IS');
+    rec.interimResults = true; rec.continuous = false;
+    rec.onresult = e => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      const txt = (finalText + interim).trim();
+      $('live').textContent = txt || 'Talaðu núna…'; $('live').className = txt ? '' : 'muted';
+      resetClose(9000, finish);
+    };
+    rec.onerror = e => {
+      if (e.error === 'language-not-supported' && rec.lang === 'is-IS') { store.set('bom_lang', 'en-US'); startListening(); return; }
+      if (e.error === 'not-allowed') $('stListenTxt').textContent = 'Leyfðu hljóðnemann, eða skrifaðu hér fyrir neðan.';
+    };
+    rec.onend = () => {
+      const g = document.querySelector('#grr'); if (g) g.classList.remove('listening');
+      if (finalText.trim() && phase === 'listening') { $('manual').value = finalText.trim(); resetClose(1500, finish); }
+    };
+    rec.start();
+    const g = document.querySelector('#grr'); if (g) g.classList.add('listening');
+  } catch (err) {}
+}
+function stopListening() { try { rec && rec.stop(); } catch (e) {} const g = document.querySelector('#grr'); if (g) g.classList.remove('listening'); }
+
+function grr() {
+  if (phase === 'listening') { finish(); return; }
+  current = { id: Date.now(), ts: new Date().toISOString(), text: '', theme: 'Annað' };
+  entries.unshift(current); save();
+  if (navigator.vibrate) navigator.vibrate(60);
+  openSheet(); render(); startListening();
+  resetClose(15000, finish);
+}
+function finish() {
+  if (!current) return;
+  stopListening(); clearTimeout(closeTimer);
+  const txt = ($('manual').value || finalText).trim();
+  current.text = txt;
+  current.theme = txt ? autoTag(txt) : 'Annað';
+  save();
+  phase = 'saved';
+  $('stListen').style.display = 'none'; $('stSaved').style.display = 'flex';
+  $('editArea').style.display = 'none'; $('savedInfo').style.display = 'block';
+  $('live').textContent = txt || '(bara tíminn)'; $('live').className = txt ? '' : 'muted';
+  $('savedTheme').textContent = current.theme;
+  $('savedQuip').textContent = (themes[current.theme] || {}).quip || 'Skráð.';
+  current = null;
+  render();
+  resetClose(2600, closeSheet);
+}
+$('btnDone').onclick = finish;
+$('btnSkip').onclick = () => { $('manual').value = ''; finalText = ''; finish(); };
+$('manual').addEventListener('focus', () => { stopListening(); clearTimeout(closeTimer); });
+
+/* ============ Skjáir ============ */
+function hdrHome() {
+  return `<div class="hdr">
+    <a class="brand" href="#profill" aria-label="Stillingar prófíls"><img src="${avatarSrc()}" alt=""><b>Bitch-o-meter</b></a>
+    <div class="today">Í dag <b>${todayCount()}</b></div></div>`;
+}
+function hdrBack(title, sub, href) {
+  return `<div class="hdr" style="justify-content:flex-start;gap:12px">
+    <a class="back" href="${href || '#yfirlit'}" aria-label="Til baka"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16142A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <div><h1 class="title">${title}</h1>${sub ? `<div class="sub">${sub}</div>` : ''}</div></div>`;
+}
+
+function viewHome() {
+  const m = mood();
+  const hint = phase === 'listening' ? 'Hlustar…' : 'Ýttu og segðu hvað bjátaði á';
+  return hdrHome() + `<div class="home">
+    <div class="avatarRow">
+      <div class="avatar ${MOODCLASS[m]}"><img src="${avatarSrc(m)}" alt="Avatar"></div>
+      <div class="bubble">${BUBBLE[m]}</div>
+    </div>
+    <button id="grr" aria-label="Skrá pirring">
+      <svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="#0F4C5C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 8.5l3.5 1.3M17.5 8.5L14 9.8M8.5 17c2-1.8 5-1.8 7 0"/><circle cx="9" cy="12" r="1" fill="#0F4C5C"/><circle cx="15" cy="12" r="1" fill="#0F4C5C"/></svg>
+      <span>Grr!</span>
     </button>
+    <div class="hint">${hint}</div>
+  </div>`;
+}
 
-    <div class="text-center mt-8">
-      <h2 class="font-display font-bold text-xl drop-shadow-sm">Ýttu og segðu hvað bjátaði á</h2>
-      <p class="text-xs text-brand-glass/90 mt-1">Hreinskilin línulosun · Greinir mynstur dagsins</p>
+function last(days) { const from = daysAgo(days - 1); return entries.filter(e => new Date(e.ts) >= from); }
+function themeCounts(list) {
+  const c = {}; list.forEach(e => { c[e.theme] = (c[e.theme] || 0) + 1; });
+  return Object.entries(c).map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n);
+}
+const PAL = ['#0F4C5C', '#E2A36B', '#3A86A8', '#7BC4B8', '#5B6C9E', '#C77D5A', '#16142A', '#9CB8C9', '#1C7F83', '#B5A07A'];
+
+function viewOverview() {
+  if (!entries.length) return hdrHome() + `<div class="card"><div class="empty">Engar skráningar enn.<br>Ýttu á <b>Grr!</b> næst þegar eitthvað pirrar þig.<br><br><a href="#profill">…eða hlaða inn dæmigögnum í prófílnum</a></div></div>`;
+  const now = new Date();
+  const perDay = []; for (let i = 6; i >= 0; i--) { const d = daysAgo(i); perDay.push({ label: i === 0 ? 'Í dag' : DAYS[wd(d)], n: entries.filter(e => sameDay(new Date(e.ts), d)).length, today: i === 0 }); }
+  const maxD = Math.max(1, ...perDay.map(p => p.n));
+  const week = last(7), tc = themeCounts(last(30)), maxT = tc.length ? tc[0].n : 1;
+  const slots = [['Morgunn', 6, 10], ['Dagurinn', 10, 16], ['Síðdegis', 16, 19], ['Kvöld', 19, 24], ['Nótt', 0, 6]];
+  const sc = slots.map(([l, a, b]) => ({ l, n: last(30).filter(e => { const h = new Date(e.ts).getHours(); return h >= a && h < b; }).length })).filter(s => s.n || s.l !== 'Nótt');
+  const maxS = Math.max(1, ...sc.map(s => s.n));
+  const opts = th => Object.keys(themes).map(t => `<option ${t === th ? 'selected' : ''}>${esc(t)}</option>`).join('');
+  return hdrHome() + `
+  <div class="card sand"><div class="grid3">
+    <div><div class="big" style="font-size:36px">${todayCount()}</div><div class="small" style="color:#5A4520;font-weight:600">í dag</div></div>
+    <div><div class="big" style="font-size:36px">${week.length}</div><div class="small" style="color:#5A4520;font-weight:600">síðustu 7 daga</div></div>
+    <div><div class="big" style="font-size:22px;line-height:1.6">${tc.length ? esc(shortTheme(tc[0].name)) : '–'}</div><div class="small" style="color:#5A4520;font-weight:600">algengast</div></div>
+  </div></div>
+  <div class="card"><div class="lbl">Síðustu 7 dagar</div><div class="bars">
+    ${perDay.map(p => `<div class="b"><em>${p.n || ''}</em><i style="height:${Math.round(p.n / maxD * 78)}%;background:${p.today ? 'linear-gradient(180deg,#2C8C8F,#0F4C5C)' : 'linear-gradient(180deg,#C9E7E3,#7BC4B8)'}"></i><small>${p.label}</small></div>`).join('')}
+  </div></div>
+  <div class="card"><div class="lbl">Þemu · 30 dagar</div>
+    ${tc.map((t, i) => `<div class="hbar"><div class="n1">${esc(t.name)}</div><div class="tr"><div class="fl" style="width:${t.n / maxT * 100}%;background:${PAL[i % PAL.length]}"></div></div><div class="n2">${t.n}</div></div>`).join('')}
+  </div>
+  <div class="card"><div class="lbl">Tími dags</div>
+    ${sc.map(s => `<div class="hbar"><div class="n1">${s.l}</div><div class="tr"><div class="fl" style="width:${s.n / maxS * 100}%;background:#3A86A8"></div></div><div class="n2">${s.n}</div></div>`).join('')}
+  </div>
+  <a class="btn ink" href="#hitakort">Sjá hitakortið</a>
+  <a class="btn teal" href="#greining">Greina mánuðinn</a>
+  <div class="card"><div class="lbl">Nýjast</div>
+    <div class="small muted" style="margin-bottom:6px">Rangt þema? Breyttu því og appið lærir af því.</div>
+    ${entries.slice(0, 40).map(e => `<div class="entry">
+      <div class="row small muted" style="justify-content:space-between"><span>${fmtWhen(new Date(e.ts))}</span><button class="del" data-del="${e.id}">Eyða</button></div>
+      <div style="font-size:15px;margin:4px 0 6px">${e.text ? esc(e.text) : '<span class="muted">(bara tíminn)</span>'}</div>
+      <select data-id="${e.id}" aria-label="Þema">${opts(e.theme)}</select>
+    </div>`).join('')}
+  </div>
+  <div class="row small" style="justify-content:center;gap:6px;color:#3E3B4A;padding:4px 0 10px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3E3B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+    Allt sem þú skráir er bara í símanum þínum.</div>`;
+}
+
+let hmKey = 'all';
+function matrix(list) { const m = Array.from({ length: 7 }, () => Array(9).fill(0)); list.forEach(e => { const d = new Date(e.ts); m[wd(d)][slotOf(d)]++; }); return m; }
+function peakOf(m) {
+  const ss = Array(9).fill(0), ds = Array(7).fill(0);
+  m.forEach((r, ri) => r.forEach((v, ci) => { ss[ci] += v; ds[ri] += v; }));
+  const dayI = ds.indexOf(Math.max(...ds));
+  const nz = ds.filter(v => v > 0).length, avg = ds.reduce((a, b) => a + b, 0) / 7;
+  const wdays = ds.slice(0, 5), wend = ds.slice(5);
+  let dayText = 'oftast á ' + DAYS_ON[dayI];
+  if (nz >= 6 && Math.max(...ds) <= avg * 1.3) dayText = 'nánast alla daga';
+  else if (Math.min(...wdays) > 0 && Math.max(...wend) < Math.min(...wdays) * 0.6) dayText = 'aðallega virka daga';
+  return { slot: ss.indexOf(Math.max(...ss)), day: dayI, dayText };
+}
+function viewHeatmap() {
+  const list30 = last(30);
+  const tc = themeCounts(list30);
+  if (hmKey !== 'all' && !tc.find(t => t.name === hmKey)) hmKey = 'all';
+  const list = hmKey === 'all' ? list30 : list30.filter(e => e.theme === hmKey);
+  const m = matrix(list), max = Math.max(1, ...m.flat());
+  const scale = ['#E1EAE8', '#B5DDD6', '#5DB5A8', '#1C7F83', '#0F4C5C'];
+  const p = peakOf(m);
+  const tip = hmKey !== 'all' && TIPS[hmKey] ? TIPS[hmKey][0] : 'Veldu kveikju hér fyrir ofan til að sjá mynstrið hennar.';
+  const chips = [{ k: 'all', l: 'Allt', n: list30.length }].concat(tc.map(t => ({ k: t.name, l: shortTheme(t.name), n: t.n })));
+  return hdrBack('Hvenær pirrast ég?', 'Síðustu 30 dagar · veldu kveikju') + `
+  <div class="chips">${chips.map(c => `<button class="pill ${c.k === hmKey ? 'on' : ''}" data-hm="${esc(c.k)}">${esc(c.l)} <span style="opacity:.75">${c.n}</span></button>`).join('')}</div>
+  <div class="card" style="padding:14px 12px">
+    <div class="hm">
+      <div></div>${SLOTS.map(s => `<div class="h">${s}</div>`).join('')}
+      ${m.map((r, ri) => `<div class="d">${DAYS[ri]}</div>` + r.map(v => { const lvl = v === 0 ? 0 : Math.min(4, Math.max(1, Math.ceil(v / max * 4))); return `<div class="c" style="background:${scale[lvl]};color:${lvl >= 4 ? '#fff' : '#16142A'}">${v || ''}</div>`; }).join('')).join('')}
     </div>
-  </main>
+    <div class="legend">Minna ${scale.map(c => `<i style="background:${c}"></i>`).join('')} Meira</div>
+  </div>
+  <div class="card inkc">
+    <div class="lbl">${hmKey === 'all' ? 'Heildarmynstur' : 'Kveikja: ' + esc(shortTheme(hmKey))}</div>
+    ${list.length ? `<div class="big" style="font-size:24px;line-height:1.15">Mest kl. ${slotLabel(p.slot)}, ${p.dayText}</div>` : '<div class="big" style="font-size:20px">Engin gögn enn</div>'}
+    <div style="font-size:14px;line-height:1.45;color:#E4E0EA;margin-top:8px">${esc(tip)}</div>
+  </div>`;
+}
 
-  <!-- Botnstika -->
-  <footer class="w-full flex justify-center pb-2">
-    <nav class="bg-[#131126]/80 backdrop-blur-xl border border-white/10 rounded-full p-1.5 flex gap-1 shadow-2xl">
-      <a href="index.html" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/20 text-white font-bold text-sm shadow-sm">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-        Log
-      </a>
-      <a href="overview.html" class="flex items-center gap-2 px-6 py-2.5 rounded-full text-white/70 hover:text-white font-medium text-sm transition">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Overview
-      </a>
-    </nav>
-  </footer>
-</body>
-</html>
-Skrá 2: overview.html
-<!DOCTYPE html>
-<html lang="is" class="h-full">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Bitch-o-meter — Yfirlit</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            display: ['"Bricolage Grotesque"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              deep: '#0A3340',
-              ocean: '#0F4C5C',
-              teal: '#1A6E78',
-              sea: '#2A8487',
-              glass: '#7BC4B8',
-              mist: '#E4F0EE',
-              ink: '#16142A'
-            }
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="min-h-full bg-gradient-to-b from-[#F4EFE6] via-[#E4F0EE] to-[#CFE6E4] text-brand-ink font-sans flex flex-col justify-between p-6 select-none antialiased">
-  
-  <header class="flex items-center justify-between pt-2 mb-6">
-    <a href="index.html" class="flex items-center gap-2.5 text-brand-ocean hover:opacity-80 transition">
-      <div class="w-8 h-8 rounded-full bg-brand-ocean text-white flex items-center justify-center font-display font-extrabold text-sm">B</div>
-      <h1 class="font-display font-extrabold text-xl tracking-tight text-brand-ocean">Bitch-o-meter</h1>
-    </a>
-    <div class="bg-white/80 px-3 py-1 rounded-full text-xs font-semibold text-brand-teal border border-brand-teal/20 shadow-sm">
-      Síðustu 30 dagar
+function viewAnalysis() {
+  const list = last(30);
+  const tc = themeCounts(list);
+  if (!list.length) return hdrBack('Greining', 'Síðustu 30 dagar') + `<div class="card"><div class="empty">Ekkert að greina enn. Skráðu í nokkra daga og komdu svo aftur.</div></div>`;
+  const top = tc[0];
+  const headline = top.name === 'Heimili – skór' ? 'Skórnir eru að vinna' : esc(shortTheme(top.name)) + ' er stærsti pirringurinn';
+  const pats = tc.slice(0, 4).map(t => { const p = peakOf(matrix(list.filter(e => e.theme === t.name))); return `<div class="row" style="align-items:flex-start;margin:8px 0"><span class="chip" style="flex:0 0 auto">${t.n}×</span><div style="font-size:15px;line-height:1.4"><b>${esc(t.name)}</b>: oftast kl. ${slotLabel(p.slot)}, ${p.dayText.replace('oftast ', 'mest ')}.</div></div>`; }).join('');
+  const tips = []; tc.forEach(t => (TIPS[t.name] || []).forEach(x => { if (tips.length < 3) tips.push(x); }));
+  const del = tc.map(t => DELEGATE[t.name]).filter(Boolean).slice(0, 3);
+  const share = Math.round(top.n / list.length * 100);
+  return hdrBack('Greining', 'Síðustu 30 dagar · ' + list.length + ' skráningar') + `
+  <h2 class="big" style="font-size:34px;letter-spacing:-1px;line-height:1.05;color:#0F4C5C;margin:4px 4px 14px">${headline}</h2>
+  <div class="card"><div class="lbl">Mynstur</div>
+    <div class="small muted" style="margin-bottom:4px">${esc(top.name)} er ${share}% af öllu.</div>${pats}</div>
+  ${tips.length ? `<div class="card sand"><div class="lbl">Prófaðu að breyta</div>${tips.map((t, i) => `<div class="row" style="align-items:baseline;margin:6px 0"><div class="big" style="font-size:20px">${i + 1}</div><div style="font-size:15px;line-height:1.4">${esc(t)}</div></div>`).join('')}</div>` : ''}
+  ${del.length ? `<div class="card dark"><div class="lbl">Fela öðrum</div>${del.map(d => `<div class="row" style="justify-content:space-between;font-size:15px;padding:6px 0;border-bottom:1px solid #3A3747"><span>${esc(d[0])}</span><b>${esc(d[1])}</b></div>`).join('')}</div>` : ''}
+  <div class="card" style="background:linear-gradient(150deg,#0A3340 0%,#0F4C5C 50%,#2A8487 100%);color:#fff">
+    <div class="lbl" style="color:#CDE7E6">Já, og…</div>
+    <div class="big" style="font-size:24px;line-height:1.15">Þykjast fótbrotna í viku.</div>
+    <div style="font-size:14px;line-height:1.45;margin-top:6px">Hækjur við útidyrnar. Sjáðu hver allt í einu fer út með hundinn, ber innkaupapokana og uppgötvar skóhilluna.</div>
+    <div class="small" style="color:#CDE7E6;margin-top:6px">Árangur ekki tryggður. Leikhæfileikar nauðsynlegir.</div>
+  </div>
+  <button class="btn light" id="copyAI">Afrita gögn til að greina í Claude</button>
+  <div class="small muted" style="text-align:center;margin-bottom:10px">Ekkert er sent neitt. Þú límir sjálf inn ef þú vilt.</div>`;
+}
+
+let editing = false;
+function viewProfile() {
+  const ageL = { '13': '13–17', '18': '18–24', '25': '25–39', '40': '40+' }, genL = { kona: 'Kona', karl: 'Karl', hlutlaust: 'Kynhlutlaust' };
+  const seg = (list, cur, key, cls) => `<div class="${cls}">${list.map(([k, l]) => `<button class="seg ${k === cur ? 'on' : ''}" data-set="${key}" data-val="${k}">${l}</button>`).join('')}</div>`;
+  const m = mood();
+  return hdrBack('Stillingar prófíls', '', '#heim') + `
+  <div class="card" style="background:var(--dark-grad);color:#fff;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div class="avatarRow"><div class="avatar ${MOODCLASS[m]}" style="width:130px;height:130px"><img src="${avatarSrc(m)}" alt="Avatar"></div><div class="bubble" style="font-size:18px">${BUBBLE[m]}</div></div>
+    <div class="big" style="font-size:24px">${esc(profile.name)}</div>
+  </div>
+  ${!editing ? `<div class="card">
+    <div class="row" style="justify-content:space-between"><div class="lbl" style="margin:0">Þinn prófíll</div><span class="small" style="color:#2E7D5B;font-weight:700">Uppsettur ✓</span></div>
+    <div class="grid3" style="margin:12px 0">
+      <div class="stat"><div class="small muted">Kyn</div><b>${genL[profile.gender]}</b></div>
+      <div class="stat"><div class="small muted">Aldur</div><b>${ageL[profile.age]}</b></div>
+      <div class="stat"><div class="small muted">Avatar</div><b>3 skapbrigði</b></div>
     </div>
-  </header>
+    <div class="small muted" style="margin-bottom:10px">Appið er stillt fyrir þig. Þú þarft ekki að gera þetta aftur.</div>
+    <button class="btn light" id="editProfile" style="margin:0">Breyta prófíl</button>
+  </div>` : `<div class="card">
+    <label class="lbl" for="pname" style="display:block">Nafn</label>
+    <input class="name" id="pname" value="${esc(profile.name)}">
+    <div class="lbl" style="margin-top:14px">Kyn</div>${seg([['kona', 'Kona'], ['karl', 'Karl'], ['hlutlaust', 'Kynhlutlaust']], profile.gender, 'gender', 'grid3')}
+    <div class="lbl" style="margin-top:14px">Aldur</div>${seg([['13', '13–17'], ['18', '18–24'], ['25', '25–39'], ['40', '40+']], profile.age, 'age', 'grid4')}
+    ${profile.gender === 'karl' ? '<div class="small muted" style="margin-top:10px">Engin karl-mynd er til enn, svo kynhlutlaus avatar er notaður.</div>' : ''}
+    <button class="btn teal" id="saveProfile" style="margin:14px 0 0">Vista prófíl</button>
+  </div>`}
+  <div class="card dark row" style="gap:12px">
+    <div style="width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <div style="font-size:14px;line-height:1.4"><b>Allt sem þú skráir er bara í símanum þínum.</b> Enginn annar sér það.</div>
+  </div>
+  <div class="card"><div class="lbl">Gögn</div>
+    <button class="btn light" id="demoData">Hlaða inn dæmigögnum (fyrir kynningu)</button>
+    <button class="btn light" id="wipe" style="color:#A8282E;margin-bottom:0">Eyða öllum skráningum</button>
+  </div>`;
+}
 
-  <main class="space-y-4 max-w-md mx-auto w-full flex-1 mb-10">
-    <div class="mb-4">
-      <p class="text-xs font-bold text-brand-sea uppercase tracking-wider">Hugarástand · 32 skráningar</p>
-      <h2 class="font-display font-extrabold text-3xl text-brand-ocean tracking-tight">Yfirlit</h2>
-      <p class="text-sm text-brand-ink/70">Raunveruleg mynstur úr daglegu lífi, án dómhörku.</p>
-    </div>
+/* ============ Dæmigögn ============ */
+function demo() {
+  const out = []; const add = (dago, h, mi, text, theme) => { const d = daysAgo(dago); d.setHours(h, mi); out.push({ id: d.getTime() + Math.random(), ts: d.toISOString(), text, theme }); };
+  for (let i = 1; i < 30; i++) {
+    const d = daysAgo(i), w = wd(d), weekday = w < 5;
+    add(i, 7, 2, 'Fór með hundinn niður þrjár hæðir að pissa', 'Hundur – göngutúrar');
+    if (weekday && i % 2) add(i, 7, 12, 'Nágrannahundurinn úti aftur, minn trylltist', 'Hundur – nágrannahundur');
+    if (weekday && i % 3 === 0) add(i, 16, 50, 'Nágrannahundurinn í stigaganginum', 'Hundur – nágrannahundur');
+    if (weekday) add(i, 15, 5, 'Sonurinn svangur og pirraður eftir skóla', 'Fjölskylda – sonur');
+    if (weekday && i % 2 === 0) add(i, 17, 30, 'Sonurinn svangur aftur fyrir kvöldmat', 'Fjölskylda – sonur');
+    if (w === 0 || w === 3) add(i, 20, 40, 'Dóttirin dónaleg við matarborðið', 'Fjölskylda – dóttir');
+    if (i % 2) add(i, 22, 45, 'Maðurinn að horfa á sjónvarpið þegar ég vil sofa', 'Fjölskylda – eiginmaður');
+    add(i, 17, 20, 'Skór út um alla forstofu. Aftur. Alltaf.', 'Heimili – skór');
+    if (w === 4 || i % 5 === 0) add(i, 17, 0, 'Bar innkaupapokana upp þrjár hæðir', 'Heimili – húsverk');
+    if (weekday && i % 2) add(i, 11, 20, 'Krakkarnir hringdu í mig á fundi', 'Fjölskylda – símtöl');
+    if (w === 0) add(i, 9, 15, 'Pósthólfið fullt eftir helgina', 'Vinna');
+  }
+  add(0, 7, 2, 'Fór með hundinn niður þrjár hæðir að pissa', 'Hundur – göngutúrar');
+  add(0, 7, 10, 'Nágrannahundurinn úti aftur, minn trylltist', 'Hundur – nágrannahundur');
+  add(0, 15, 5, 'Sonurinn svangur og pirraður eftir skóla', 'Fjölskylda – sonur');
+  add(0, 11, 20, 'Krakkarnir hringdu í mig á fundi', 'Fjölskylda – símtöl');
+  add(0, 9, 30, 'Skór út um alla forstofu. Aftur. Alltaf.', 'Heimili – skór');
+  return out.sort((a, b) => b.ts.localeCompare(a.ts));
+}
 
-    <!-- Lykiltölur spjald -->
-    <div class="p-5 rounded-3xl bg-gradient-to-br from-[#F2DFC0] via-[#EFD3BC] to-[#CDE7E3] shadow-sm">
-      <p class="text-xs font-bold uppercase tracking-wider text-brand-ink/70 mb-3 flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-ocean"></span> Samantekt
-      </p>
-      <div class="grid grid-cols-3 gap-2 text-center">
-        <div class="bg-white/50 backdrop-blur-sm p-3 rounded-2xl">
-          <div class="font-display font-extrabold text-2xl text-brand-ocean">6</div>
-          <div class="text-[11px] font-semibold text-brand-ink/70">Í dag</div>
-        </div>
-        <div class="bg-white/50 backdrop-blur-sm p-3 rounded-2xl">
-          <div class="font-display font-extrabold text-2xl text-brand-ocean">17</div>
-          <div class="text-[11px] font-semibold text-brand-ink/70">7 dagar</div>
-        </div>
-        <div class="bg-white/50 backdrop-blur-sm p-3 rounded-2xl">
-          <div class="font-display font-extrabold text-2xl text-brand-ocean">Skór</div>
-          <div class="text-[11px] font-semibold text-brand-ink/70">38% alls</div>
-        </div>
-      </div>
-    </div>
+/* ============ Leiðsögn ============ */
+function route() { return (location.hash || '#heim').slice(1); }
+function render() {
+  const r = route();
+  document.body.classList.toggle('dark', r === 'heim');
+  const views = { heim: viewHome, yfirlit: viewOverview, hitakort: viewHeatmap, greining: viewAnalysis, profill: viewProfile };
+  $('app').innerHTML = (views[r] || viewHome)();
+  document.querySelectorAll('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.tab === r || (r !== 'heim' && a.dataset.tab === 'yfirlit' && r !== 'profill')));
+  bind(r);
+}
+function bind(r) {
+  const g = $('grr'); if (g) { g.onclick = grr; if (phase === 'listening') g.classList.add('listening'); }
+  document.querySelectorAll('select[data-id]').forEach(s => s.onchange = () => {
+    const e = entries.find(x => String(x.id) === s.dataset.id); if (!e) return;
+    e.theme = s.value; learn(e.text, e.theme); save(); toast('Lært ✓'); render();
+  });
+  document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { entries = entries.filter(x => String(x.id) !== b.dataset.del); save(); render(); });
+  document.querySelectorAll('[data-hm]').forEach(b => b.onclick = () => { hmKey = b.dataset.hm; render(); });
+  document.querySelectorAll('[data-set]').forEach(b => b.onclick = () => { const n = $('pname'); if (n) profile.name = n.value.trim() || profile.name; profile[b.dataset.set] = b.dataset.val; render(); });
+  if ($('editProfile')) $('editProfile').onclick = () => { editing = true; render(); };
+  if ($('saveProfile')) $('saveProfile').onclick = () => { profile.name = $('pname').value.trim() || 'Ég'; editing = false; save(); toast('Vistað ✓'); render(); };
+  if ($('demoData')) $('demoData').onclick = () => { if (entries.length && !confirm('Bæta dæmigögnum við skráningarnar þínar?')) return; entries = demo().concat(entries).sort((a, b) => b.ts.localeCompare(a.ts)); save(); toast('Dæmigögn komin inn'); location.hash = '#yfirlit'; };
+  if ($('wipe')) $('wipe').onclick = () => { if (!confirm('Eyða öllum skráningum? Þetta er ekki hægt að afturkalla.')) return; entries = []; save(); toast('Öllu eytt'); render(); };
+  if ($('copyAI')) $('copyAI').onclick = copyAI;
+}
+function copyAI() {
+  const lines = last(30).slice().reverse().map(e => { const d = new Date(e.ts); return `${DAYS[wd(d)]} ${d.toLocaleDateString('is-IS')} kl. ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)} | ${e.theme} | ${e.text || '(engin lýsing)'}`; });
+  const txt = `Hér er pirringsdagbókin mín síðustu 30 daga (dagur | þema | hvað gerðist).\nGreindu hana og gefðu mér, stutt og myndrænt:\n1. Helstu mynstur (hvað, hvenær, hverjir)\n2. 3–5 raunhæfar breytingar á venjum\n3. Hvaða verk ég get falið öðrum og hvernig\n4. Mörk sem ég get sett\n\n${lines.join('\n')}`;
+  const done = () => toast('Afritað ✓ Límdu í Claude');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done)); else fallbackCopy(txt, done);
+}
+function fallbackCopy(t, cb) { const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); cb(); } catch (e) {} a.remove(); }
 
-    <!-- Súlurit -->
-    <div class="p-5 rounded-3xl bg-white shadow-sm border border-black/5">
-      <div class="flex justify-between items-center mb-4">
-        <div>
-          <h3 class="font-display font-bold text-base text-brand-ocean">Síðustu 7 dagar</h3>
-          <p class="text-xs text-brand-ink/60">17 skráningar samtals</p>
-        </div>
-        <span class="text-xs font-bold text-brand-teal bg-brand-mist px-2.5 py-1 rounded-full">Hámark í dag</span>
-      </div>
-      
-      <div class="flex items-end justify-between h-36 pt-6 pb-2 px-1 gap-2 border-b border-gray-100">
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">2</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 33%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Mið</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">3</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 50%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Fim</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">1</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 16%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Fös</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">2</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 33%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Lau</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">1</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 16%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Sun</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-gray-500">2</span>
-          <div class="w-full bg-brand-glass rounded-t-lg transition-all" style="height: 33%"></div>
-          <span class="text-[10px] font-semibold text-gray-400">Mán</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-2">
-          <span class="text-[10px] font-bold text-brand-ocean">6</span>
-          <div class="w-full bg-brand-ocean rounded-t-lg transition-all" style="height: 100%"></div>
-          <span class="text-[10px] font-bold text-brand-ocean">Í dag</span>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Botnstika -->
-  <footer class="w-full flex justify-center pb-2">
-    <nav class="bg-[#131126] border border-white/10 rounded-full p-1.5 flex gap-1 shadow-2xl">
-      <a href="index.html" class="flex items-center gap-2 px-6 py-2.5 rounded-full text-white/70 hover:text-white font-medium text-sm transition">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-        Log
-      </a>
-      <a href="overview.html" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/20 text-white font-bold text-sm shadow-sm">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Overview
-      </a>
-    </nav>
-  </footer>
+window.addEventListener('hashchange', () => { if (phase === 'saved') closeSheet(); render(); window.scrollTo(0, 0); });
+render();
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
 </body>
 </html>
